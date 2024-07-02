@@ -1,0 +1,39 @@
+service: metube
+image: user/my-app
+servers:
+  - 192.168.0.1
+
+registry:
+  server: ghcr.io
+  username: my-user
+  password:
+    - REGISTRY_PASSWORD
+
+env:
+  clear:
+    REDIS_URL: redis://redis:6379/0
+  secret:
+    - SECRET_KEY_BASE
+
+ssh:
+  user: metube
+
+# Configure builder setup.
+# builder:
+#   args:
+#     RUBY_VERSION: 3.3.2
+#   secrets:
+#     - GITHUB_TOKEN
+#   remote:
+#     arch: amd64
+#     host: ssh://app@192.168.0.1
+
+accessories:
+  redis:
+    image: redis:7.2.5-alpine
+    host: 192.168.0.2
+    port: 6379
+    directories:
+      - data:/data
+
+asset_path: /rails/public/assets

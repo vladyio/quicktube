@@ -1,0 +1,29 @@
+<div class="flex items-center justify-center w-full">
+  <div class="w-full px-4 text-center">
+    <h1 class="text-3xl font-bold text-center mb-6 text-blue-500">
+      <%= request.host.upcase %> 🎧
+    </h1>
+
+    <input type="text"
+           class="w-full px-4 py-2 text-gray-700 bg-white border border-blue-500
+                  rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500
+                  focus:border-blue-500 dark:bg-gray-900 dark:text-white"
+           data-controller="link-input download status"
+           data-action="input->link-input#change
+                        link-input:validLink->status#validLink
+                        link-input:invalidLink->status#invalidLink
+                        link-input:downloadStart->download#start
+                        download:loading->status#loading
+                        download:stopLoading->status#stopLoading
+                        download:complete->link-input#reset"
+           data-link-input-target="text"
+           data-status-target="text"
+           data-download-url-value=<%= download_index_path %>>
+
+    <a href="#" class="hidden" id="download-link" download></a>
+
+    <div class=" text-pink-700 mt-5 px-4 py-3 rounded relative"
+         role="alert"
+         id="error-container"></div>
+  </div>
+</div>
