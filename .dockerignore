@@ -2,6 +2,7 @@
 
 # Ignore git directory.
 /.git/
+shot.png
 
 # Ignore bundler config.
 /.bundle

@@ -1,39 +1,86 @@
-service: metube
-image: user/my-app
+service: quicktube
+image: username/quicktube
 servers:
-  - 192.168.0.1
+  web:
+    options:
+      network: quicktube
+    hosts:
+      - HOST_IP
+    labels:
+      traefik.http.routers.quicktube-web.rule: "Host(`domain.com`) || Host(`www.domain.com`)"
+      traefik.http.routers.quicktube-web-secure.entrypoints: websecure
+      traefik.http.routers.quicktube-web-secure.rule: "Host(`domain.com`) || Host(`www.domain.com`)"
+      traefik.http.routers.quicktube-web-secure.tls: true
+      traefik.http.routers.quicktube-web-secure.tls.certresolver: letsencrypt
+
+      traefik.http.routers.quicktube-dl.rule: "Host(`domain.com`) && PathPrefix(`/dl/`)"
+      traefik.http.routers.quicktube-dl.entrypoints: websecure
+      traefik.http.routers.quicktube-dl.middlewares: quicktube-dl-middleware
+      traefik.http.middlewares.quicktube-dl-middleware.headers.accesscontrolalloworiginlist: "*"
+      traefik.http.middlewares.quicktube-dl-middleware.headers.accesscontrolallowmethods: "GET,OPTIONS,HEAD"
+  job:
+    hosts:
+      - HOST_IP
+    cmd: bundle exec sidekiq
+    options:
+      network: quicktube
+
+volumes:
+  - "/rails/public/dl:/rails/public/dl"
 
 registry:
   server: ghcr.io
-  username: my-user
+  username: username
   password:
     - REGISTRY_PASSWORD
 
 env:
   clear:
-    REDIS_URL: redis://redis:6379/0
+    REDIS_URL: redis://quicktube-redis:6379/0
   secret:
     - SECRET_KEY_BASE
 
-ssh:
-  user: metube
-
-# Configure builder setup.
-# builder:
-#   args:
-#     RUBY_VERSION: 3.3.2
-#   secrets:
-#     - GITHUB_TOKEN
-#   remote:
-#     arch: amd64
-#     host: ssh://app@192.168.0.1
+traefik:
+  image: traefik:3.0.3
+  options:
+    publish:
+      - "443:443"
+    volume:
+      - "/etc/letsencrypt:/letsencrypt"
+    network: quicktube
+  args:
+    log: true
+    log.level: ERROR
+    api.dashboard: true
+    api.insecure: false
+    entryPoints.web.address: ":80"
+    entryPoints.websecure.address: ":443"
+    certificatesResolvers.letsencrypt.acme.email: "admin@domain.com"
+    certificatesResolvers.letsencrypt.acme.storage: "/letsencrypt/acme.json"
+    certificatesResolvers.letsencrypt.acme.httpchallenge: true
+    certificatesResolvers.letsencrypt.acme.httpchallenge.entrypoint: web
+  labels:
+    traefik.http.routers.dashboard.rule: "Host(`traefik.domain.com`) || Host(`www.traefik.domain.com`)"
+    traefik.http.routers.dashboard.service: api@internal
+    traefik.http.routers.dashboard.middlewares: redirect-to-https, auth
+    traefik.http.routers.dashboard.tls: true
+    traefik.http.middlewares.auth.basicauth.users: [Run `htpasswd -nb username password` and copy here]
+    traefik.http.middlewares.redirect-to-https.redirectscheme.scheme: https
+    traefik.http.routers.catchall.rule: hostregexp(`{host:.+}`)
+    traefik.http.routers.catchall.service: noop@internal
+    traefik.http.routers.catchall.entrypoints: websecure
+    traefik.http.routers.catchall.middlewares: redirect-to-https
+    traefik.http.routers.catchall.tls: true
 
 accessories:
   redis:
+    roles:
+      - web
+      - job
     image: redis:7.2.5-alpine
-    host: 192.168.0.2
-    port: 6379
     directories:
       - data:/data
+    options:
+      network: quicktube
 
 asset_path: /rails/public/assets

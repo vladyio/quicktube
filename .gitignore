@@ -9,6 +9,7 @@
 
 # Ignore all environment files (except templates).
 /.env*
+!/.env.sample
 !/.env*.erb
 config/deploy.yml
 
