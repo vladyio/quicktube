@@ -59,7 +59,7 @@ RUN useradd rails --create-home --shell /bin/bash && \
 RUN chmod u+s /usr/sbin/cron
 
 # Allow access (r/w) to host volume to save files
-RUN chmod -R 777 /rails/public/dl
+RUN chmod -R 700 /rails/public/dl
 
 USER rails:rails
 

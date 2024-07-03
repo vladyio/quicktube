@@ -1,0 +1,155 @@
+#!/usr/bin/env ruby
+# Provision a virtual private server for Kamal deployments on Ubuntu 22 LTS.
+#
+# This script relies on SSH keys authentication.
+#
+# Make sure to add your private key first:
+#   % ssh-add ~/path/to/ssh/key
+
+require "net/ssh"
+require "kamal"
+
+DEFAULT_SSH_PORT = 22
+
+def puts_ok(message) = puts "\e[32m#{message}\e[0m"
+def puts_info(message) = puts "\e[33m#{message}\e[0m"
+def puts_error(message) = puts "\e[31m#{message}\e[0m"
+
+environment = ARGV[0] || nil
+filepath = "config/deploy#{".#{environment}" if environment}.yml"
+config_file = Pathname.new(File.expand_path(filepath))
+config = Kamal::Configuration.create_from(config_file: config_file)
+
+hosts = config.roles.map(&:hosts).flatten + config.accessories.map(&:hosts).flatten
+hosts.uniq!
+user_name = config.ssh.user
+ssh_port = config.ssh.port || DEFAULT_SSH_PORT
+
+# Install Docker and add the private network
+install_essentials = <<~EOF
+  apt update && apt install -y build-essential curl
+EOF
+
+# Prepare storage
+prepare_storage = <<~EOF
+  mkdir -p /rails/public/dl;
+  chmod 700 /rails/public/dl;
+  chown 1000:1000 /rails/public/dl
+EOF
+
+# Prepare Let's Encrypt
+prepare_letsencrypt = <<~EOF
+  mkdir -p /etc/letsencrypt;
+  touch /etc/letsencrypt/acme.json;
+  chmod 600 /etc/letsencrypt/acme.json
+EOF
+
+# Add non-root user
+add_user = <<~EOF
+  useradd --create-home #{user_name};
+  su - #{user_name} -c 'mkdir -p ~/.ssh';
+  su - #{user_name} -c 'touch ~/.ssh/authorized_keys';
+  cat /root/.ssh/authorized_keys >> /home/#{user_name}/.ssh/authorized_keys;
+  chmod 700 /home/#{user_name}/.ssh;
+  chmod 600 /home/#{user_name}/.ssh/authorized_keys;
+  echo '#{user_name} ALL=(ALL:ALL) NOPASSWD: ALL' | tee /etc/sudoers.d/#{user_name};
+  chmod 0440 /etc/sudoers.d/#{user_name};
+  visudo -c -f /etc/sudoers.d/#{user_name}
+EOF
+
+install_docker = <<~EOF
+  docker -v || curl -fsSL https://get.docker.com | sh;
+  systemctl enable docker;
+  systemctl start docker;
+  docker network create quicktube;
+  groupadd docker;
+  usermod -aG docker #{user_name}
+EOF
+
+# Install fail2ban
+
+install_fail2ban = <<~EOF
+  apt install -y fail2ban;
+  systemctl start fail2ban;
+  systemctl enable fail2ban
+EOF
+
+# Configure firewall
+configure_firewall = <<~EOF
+  ufw logging on;
+  ufw default deny incoming;
+  ufw default allow outgoing;
+  ufw allow #{ssh_port};
+  ufw allow 80;
+  ufw allow 443;
+  ufw --force enable;
+  systemctl restart ufw
+EOF
+
+# Disable root
+disable_root = <<~EOF
+  sed -i 's@PasswordAuthentication yes@PasswordAuthentication no@g' /etc/ssh/sshd_config;
+  sed -i 's@PermitRootLogin yes@PermitRootLogin no@g' /etc/ssh/sshd_config;
+  chage -E 0 root;
+  systemctl restart ssh
+EOF
+
+# Setup custom SSH port (if exists)
+custom_ssh_port = <<~EOF
+  sed -i 's/#*Port 22/Port #{ssh_port}/g' /etc/ssh/sshd_config
+  systemctl restart ssh
+EOF
+
+puts_info "== Preparing #{environment} server(s) =="
+
+hosts.each do |host|
+  puts_info "Running `ssh-copy-id root@#{host}`"
+
+  system("ssh-copy-id root@#{host}") do |stdout, stderr, status|
+  if status.exitstatus != 0
+    puts_error "Error copying SSH key: #{stderr.read}"
+    exit 1
+  else
+    puts_ok "SSH key copied successfully!"
+  end
+end
+
+  puts_info "== Provisioning server '#{host}' with user '#{user_name}' =="
+
+  if ssh_port != DEFAULT_SSH_PORT
+    Net::SSH.start(host, "root") do |ssh|
+      puts_info "Changing SSH port to #{ssh_port}..."
+      ssh.exec! custom_ssh_port
+    end
+  end
+
+  Net::SSH.start(host, "root", port: ssh_port) do |ssh|
+    puts_info "Installing essential packages..."
+    ssh.exec!(install_essentials)
+    puts_info "Preparing storage for disk service..."
+    ssh.exec!(prepare_storage)
+    puts_info "Preparing Let's Encrypt..."
+    ssh.exec!(prepare_letsencrypt)
+    puts_info "Adding user with sudo privileges..."
+    ssh.exec!(add_user)
+    puts_info "Installing and configuring Docker..."
+    ssh.exec!(install_docker)
+    puts_info "Installing and running fail2ban..."
+    ssh.exec!(install_fail2ban)
+    puts_info "Configure firewall..."
+    ssh.exec!(configure_firewall)
+    puts_info "Disabling root..."
+    ssh.exec!(disable_root)
+  end
+end
+
+puts_ok "Done!"
+puts_info "Remember to log in as '#{user_name}' from now on:"
+puts_info " ssh #{user_name}@#{hosts.first}"
+
+puts "To deploy, run:"
+puts <<-EOF
+  kamal env push #{'-d ' + environment if environment}
+  kamal accessory boot redis #{'-d ' + environment if environment}
+  kamal deploy #{'-d ' + environment if environment}
+EOF
