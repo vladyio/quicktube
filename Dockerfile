@@ -42,7 +42,7 @@ FROM base
 
 # Install packages needed for deployment
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y curl ffmpeg && \
+    apt-get install --no-install-recommends -y curl ffmpeg cron && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 # Copy built artifacts: gems, application
@@ -55,6 +55,8 @@ RUN chmod 755 /usr/local/bin/yt-dlp
 # Run and own only the runtime files as a non-root user for security
 RUN useradd rails --create-home --shell /bin/bash && \
     chown -R rails:rails log tmp public/dl
+
+RUN chmod u+s /usr/sbin/cron
 
 # Allow access (r/w) to host volume to save files
 RUN chmod -R 777 /rails/public/dl
