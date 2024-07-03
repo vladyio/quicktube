@@ -30,10 +30,30 @@
 
     `cp .env.sample .env`
 5. Change `.env` to suit your needs
-6. Initialize the deployment:
+6. Prepare server(s) - everything from copying an SSH key to setting up UFW, users and permissions:
 
    ```
-   kamal setup
-   kamal deploy
-   kamal accessories boot redis
+   ./bin/prepare_server
    ```
+7. Finally, deploy:
+
+   ```
+   kamal env push
+   kamal accessory boot redis
+   kamal deploy
+   ```
+
+## Custom environments
+
+It's possible to prepare & deploy a custom environment too.
+
+Make sure you have a `config/deploy.[environment].yml` and `.env.[environment]` files.
+
+For example, for a `staging` environment:
+
+    ./bin/prepare_server staging
+
+    kamal env push -d staging
+    kamal accessory boot redis -d staging
+    kamal deploy -d staging.
+

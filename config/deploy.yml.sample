@@ -44,6 +44,9 @@ env:
   secret:
     - SECRET_KEY_BASE
 
+ssh:
+  user: admin
+
 traefik:
   image: traefik:3.0.3
   options:
