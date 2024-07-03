@@ -24,6 +24,10 @@ servers:
     cmd: bundle exec sidekiq
     options:
       network: quicktube
+  cron:
+    hosts:
+      - HOST_IP
+    cmd: bash -c "cat config/crontab | crontab - && cron -f"
 
 volumes:
   - "/rails/public/dl:/rails/public/dl"

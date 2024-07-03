@@ -1,0 +1,1 @@
+@hourly bundle exec rails runner 'DlCleanup.call'
