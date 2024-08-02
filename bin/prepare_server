@@ -144,7 +144,7 @@ end
 
 puts_ok "Done!"
 puts_info "Remember to log in as '#{user_name}' from now on:"
-puts_info " ssh #{user_name}@#{hosts.first}"
+puts_info " ssh #{user_name}@#{hosts.first} #{'-p ' + ssh_port.to_s if ssh_port != DEFAULT_SSH_PORT}"
 
 puts "To deploy, run:"
 puts <<-EOF
