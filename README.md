@@ -11,7 +11,7 @@
 <hr>
 
 <div align="center">
-  💎 Ruby 3.3 · 🛤 Rails 7.1 · ⚡️ Stimulus · 🅺 Kamal
+  💎 Ruby 3.3 · 🛤 Rails 7.2 · ⚡️ Stimulus · 🅺 Kamal
 </div>
 
 <hr>
