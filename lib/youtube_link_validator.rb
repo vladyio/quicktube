@@ -5,9 +5,8 @@ class YoutubeLinkValidator
     ^(https?:\/\/)?
     (www\.)?
     (youtube\.com|youtu\.be|m\.youtube\.com|music\.youtube\.com|gaming\.youtube\.com)
-    \/(watch\?v=|embed\/|v\/|.+\?v=)?
-    ([a-zA-Z0-9_-]{11})
-    (&.+)?$
+    \/(watch\?v=|embed\/|v\/|.+\?v=)?([a-zA-Z0-9_-]{11})
+    (&.*)?$
   }x
 
   attr_reader :link
