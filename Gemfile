@@ -2,24 +2,26 @@ source "https://rubygems.org"
 
 ruby file: ".ruby-version"
 
-gem "rails", "~> 7.2", ">= 7.2.1"
+gem "importmap-rails"
 gem "propshaft"
 gem "puma"
-gem "importmap-rails"
-gem "turbo-rails"
-gem "stimulus-rails"
-gem "tailwindcss-rails"
+gem "rails", "~> 7.2", ">= 7.2.1"
 gem "redis"
 gem "sidekiq"
+gem "stimulus-rails"
+gem "tailwindcss-rails"
+gem "turbo-rails"
 
-gem "tzinfo-data", platforms: %i[ windows jruby ]
 gem "bootsnap", require: false
+gem "tzinfo-data", platforms: %i[windows jruby]
 
 group :development, :test do
-  gem "debug", platforms: %i[ mri windows ]
+  gem "brakeman"
+  gem "debug", platforms: %i[mri windows]
 end
 
 group :development do
+  gem "rubocop"
+  gem "rubocop-rails-omakase", require: false
   gem "web-console"
 end
-
