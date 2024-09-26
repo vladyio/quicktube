@@ -8,7 +8,7 @@ class DownloadJob
 
     ActionCable.server.broadcast "download_#{jid}", { status: :complete, message: file_path }
   rescue YoutubeDownload::DownloadError, StandardError => e
-    Rails.logger.error "[YoutubeDownload (#{link})] #{e.message}"
+    Rails.logger.tagged(self.class.name, link).error(e.message)
 
     ActionCable.server.broadcast "download_#{jid}", { status: :error, message: e.message }
   end
