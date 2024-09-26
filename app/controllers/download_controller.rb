@@ -15,7 +15,7 @@ class DownloadController < ApplicationController
 
   def show
     filename = params[:filename]
-    file_path = Rails.root.join("public", "dl", filename).realpath
+    file_path = Rails.root.join("public", "dl", filename).realdirpath
 
     Rails.logger.tagged("DL").info("Downloading: #{filename}, path: #{file_path}")
 
