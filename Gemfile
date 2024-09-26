@@ -13,6 +13,7 @@ gem "tailwindcss-rails"
 gem "turbo-rails"
 
 gem "bootsnap", require: false
+gem "ostruct", "~> 0.6.0"
 gem "tzinfo-data", platforms: %i[windows jruby]
 
 group :development, :test do
