@@ -15,15 +15,15 @@ class DownloadController < ApplicationController
 
   def show
     filename = params[:filename]
-    file_path = Rails.root.join("public", "dl", filename)
+    file_path = Rails.root.join("public", "dl", filename).realpath
 
-    Rails.logger.info("[DL] Downloading: #{filename}, path: #{file_path}")
+    Rails.logger.tagged("DL").info("Downloading: #{filename}, path: #{file_path}")
 
-    if Pathname.new(file_path).exist?
-      Rails.logger.info("[DL] File found, sending for download")
+    if FilePathValidator.new(file_path).valid?
+      Rails.logger.tagged("DL").info("File found, sending for download")
       send_file file_path, disposition: "attachment"
     else
-      Rails.logger.warn("[DL] File not found: #{filename}")
+      Rails.logger.tagged("DL").warn("File not found: #{filename}")
       render file: "#{Rails.root}/public/404.html", status: :not_found, layout: false
     end
   end
