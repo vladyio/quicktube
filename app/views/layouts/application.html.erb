@@ -30,6 +30,11 @@
          _target="blank">
         GitHub
       </a>
+
+      <sup class="text-blue-400">
+        <%= %x[git tag --list | sort | tail -n 1] %>
+        (<%= %x[git branch --show-current].strip %>)
+      </sup>
     </footer>
   </body>
 </html>
