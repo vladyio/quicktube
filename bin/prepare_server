@@ -36,13 +36,6 @@ prepare_storage = <<~EOF
   chown 1000:1000 /rails/public/dl
 EOF
 
-# Prepare Let's Encrypt
-prepare_letsencrypt = <<~EOF
-  mkdir -p /etc/letsencrypt;
-  touch /etc/letsencrypt/acme.json;
-  chmod 600 /etc/letsencrypt/acme.json
-EOF
-
 # Add non-root user
 add_user = <<~EOF
   useradd --create-home #{user_name};
@@ -56,12 +49,11 @@ add_user = <<~EOF
   visudo -c -f /etc/sudoers.d/#{user_name}
 EOF
 
-# Install Docker and add the private network
+# Install Docker
 install_docker = <<~EOF
   docker -v || curl -fsSL https://get.docker.com | sh;
   systemctl enable docker;
   systemctl start docker;
-  docker network create quicktube;
   groupadd docker;
   usermod -aG docker #{user_name}
 EOF
@@ -127,8 +119,6 @@ end
     ssh.exec!(install_essentials)
     puts_info "Preparing storage for disk service..."
     ssh.exec!(prepare_storage)
-    puts_info "Preparing Let's Encrypt..."
-    ssh.exec!(prepare_letsencrypt)
     puts_info "Adding user with sudo privileges..."
     ssh.exec!(add_user)
     puts_info "Installing and configuring Docker..."
@@ -148,7 +138,6 @@ puts_info " ssh #{user_name}@#{hosts.first} #{'-p ' + ssh_port.to_s if ssh_port 
 
 puts "To deploy, run:"
 puts <<-EOF
-  kamal env push #{'-d ' + environment if environment}
   kamal accessory boot redis #{'-d ' + environment if environment}
   kamal deploy #{'-d ' + environment if environment}
 EOF
