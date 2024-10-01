@@ -54,8 +54,9 @@ ADD https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_linux /usr/
 RUN chmod 755 /usr/local/bin/yt-dlp
 
 # Run and own only the runtime files as a non-root user for security
-RUN useradd rails --create-home --shell /bin/bash && \
-    chown -R rails:rails log tmp public/dl
+RUN useradd rails --home /home/rails --shell /bin/bash && \
+    mkdir -p /home/rails && \
+    chown -R rails:rails log tmp public/dl /home/rails
 
 RUN chmod u+s /usr/sbin/cron
 
@@ -63,6 +64,8 @@ RUN chmod u+s /usr/sbin/cron
 RUN chmod -R 700 /rails/public/dl
 
 USER rails:rails
+
+RUN git config --global --add safe.directory /rails
 
 # Entrypoint prepares the database.
 ENTRYPOINT ["/rails/bin/docker-entrypoint"]
