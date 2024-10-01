@@ -16,6 +16,7 @@ config/deploy.*.yml
 
 # Kamal 2 secrets
 .kamal/secrets*
+!.kamal/secrets.sample
 
 # Ignore all logfiles and tempfiles.
 /log/*

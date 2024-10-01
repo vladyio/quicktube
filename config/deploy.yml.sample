@@ -37,6 +37,9 @@ registry:
 env:
   clear:
     REDIS_URL: redis://quicktube-redis:6379/0
+    MAX_FILESIZE: 1G
+    RETRIES: 5
+    PATHS: public/dl
   secret:
     - SECRET_KEY_BASE
 
