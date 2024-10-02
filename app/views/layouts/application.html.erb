@@ -35,8 +35,10 @@
 
       <section class="mt-2">
         <sup class="text-blue-400">
-          <%= %x[git tag --list | sort | tail -n 1] %>
-          (<%= %x[git branch --show-current].strip %>)
+          <code>
+            <%= %x[git tag --list | sort | tail -n 1] %>
+            (<%= %x[git rev-parse --short HEAD].strip %>)
+          </code>
         </sup>
       </section>
     </footer>
