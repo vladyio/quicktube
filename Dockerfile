@@ -66,7 +66,7 @@ RUN chmod 755 /usr/local/bin/yt-dlp
 # Run and own only the runtime files as a non-root user for security
 RUN groupadd --system --gid 1000 rails && \
     useradd rails --uid 1000 --gid 1000 --create-home --shell /bin/bash && \
-    chown -R rails:rails db log storage tmp public/dl
+    chown -R rails:rails log tmp public/dl
 USER 1000:1000
 
 RUN chmod u+s /usr/sbin/cron
