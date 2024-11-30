@@ -2,22 +2,49 @@
 <html>
 
 <head>
-  <title>Not found</title>
+  <title>Page Went Poof!</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <style>
-    @media (prefers-color-scheme: dark) {
-      body {
-        background-color: #1f2937;
+    :root {
+      @media (prefers-color-scheme: dark) {
+        --background-color: #1f2937;
+        --text-color: white;
       }
+
+      @media (prefers-color-scheme: light) {
+        --background-color: white;
+        --text-color: #1f2937;
+      }
+    }
+
+    body {
+      background-color: var(--background-color);
     }
 
     main {
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
-      color: white;
+      color: var(--text-color);
       font-family: monospace;
-      font-size: 50vh;
+      font-size: 30vw;
+      padding-bottom: 0px;
+      line-height: 1;
+
+      &> :not(footer) {
+        border-bottom: 50px solid var(--text-color);
+      }
+    }
+
+    footer {
+      margin-top: 100px;
+      font-size: 16px;
+      color: var(--text-color);
+      width: 80ch;
+      max-width: 100%;
+      line-height: 1.5;
+      text-align: justify
     }
   </style>
 </head>
@@ -25,6 +52,11 @@
 <body>
   <main>
     <div>404</div>
+
+    <footer>
+      Nice try, but whatever you're looking for doesn’t exist here.
+      Maybe double-check before you go clicking around?
+    </footer>
   </main>
 </body>
 
