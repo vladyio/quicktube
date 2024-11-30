@@ -5,13 +5,12 @@ ruby file: ".ruby-version"
 gem "importmap-rails"
 gem "propshaft"
 gem "puma"
-gem "rails", "~> 7.2", ">= 7.2.1"
+gem "rails", "~> 8.0"
 gem "redis"
 gem "sidekiq"
 gem "stimulus-rails"
 gem "tailwindcss-rails"
 gem "turbo-rails"
-
 gem "bootsnap", require: false
 gem "ostruct", "~> 0.6.0"
 gem "tzinfo-data", platforms: %i[windows jruby]
