@@ -10,24 +10,33 @@ export default class extends Controller {
     this.consumer = createConsumer()
   }
 
-  start(event) {
-    const { link } = event.detail
+  async start(event) {
+    const { link } = event.detail;
 
-    this.fetch(link)
+    try {
+      await this.fetch(link);
+    } catch (error) {
+      document.querySelector('#error-container').innerHTML = error.message;
+    }
   }
 
-  fetch(link) {
-    this.dispatch('loading')
+  async fetch(link) {
+    this.dispatch('loading');
 
-    fetch(`${this.urlValue}?link=${encodeURIComponent(link)}`)
-      .then(response => response.json())
-      .then(({ jid }) => {
-        this.createSubscription(jid)
-      })
-      .catch(error => {
-        this.dispatch('stopLoading')
-        document.querySelector('#error-container').innerHTML = error.message
-      })
+    try {
+      const response = await fetch(`${this.urlValue}?link=${encodeURIComponent(link)}`);
+
+      if (!response.ok) {
+        const { message } = await response.json();
+        throw new Error(message);
+      }
+
+      const { jid } = await response.json();
+      this.createSubscription(jid);
+    } catch (error) {
+      this.dispatch('stopLoading');
+      document.querySelector('#error-container').innerHTML = error.message;
+    }
   }
 
   createSubscription(jid) {

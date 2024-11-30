@@ -9,7 +9,7 @@ class DownloadController < ApplicationController
 
       render json: { jid: }
     else
-      render json: { jid: nil }, status: :unprocessable_entity
+      render json: { jid: nil, message: "Invalid or unsupported YouTube link" }, status: :unprocessable_entity
     end
   end
 
