@@ -16,7 +16,7 @@ WORKDIR /rails
 
 # Install base packages
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y curl libjemalloc2 libvips git && \
+    apt-get install --no-install-recommends -y curl libjemalloc2 libvips git ffmpeg cron && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 # Set production environment
@@ -30,7 +30,7 @@ FROM base AS build
 
 # Install packages needed to build gems
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y build-essential git pkg-config curl ffmpeg cron git && \
+    apt-get install --no-install-recommends -y build-essential git pkg-config && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 # Install application gems
@@ -67,9 +67,10 @@ RUN chmod 755 /usr/local/bin/yt-dlp
 RUN groupadd --system --gid 1000 rails && \
     useradd rails --uid 1000 --gid 1000 --create-home --shell /bin/bash && \
     chown -R rails:rails log tmp public/dl
-USER 1000:1000
 
 RUN chmod u+s /usr/sbin/cron
+
+USER 1000:1000
 
 # Allow access (r/w) to host volume to save files
 RUN chmod -R 700 /rails/public/dl
