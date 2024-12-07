@@ -5,10 +5,10 @@ class YoutubeLinkValidator
     ^(https?:\/\/)?
     (www\.)?
     (youtube\.com|youtu\.be|m\.youtube\.com|music\.youtube\.com|gaming\.youtube\.com)
-    \/(watch\?v=|embed\/|v\/|.+\?v=|live\/)
+    \/(watch\?v=|embed\/|v\/|.+\?v=|live\/|)
     ([a-zA-Z0-9_-]{11})
     (\?feature=shared)?
-    (&.*)?$
+    (&.*|\?.+)?$
   }x
 
   attr_reader :link
