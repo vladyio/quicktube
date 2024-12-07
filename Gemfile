@@ -5,6 +5,7 @@ ruby file: ".ruby-version"
 gem "bootsnap", require: false
 gem "dotenv", "~> 3.1"
 gem "importmap-rails"
+gem "kamal"
 gem "ostruct", "~> 0.6.0"
 gem "propshaft"
 gem "puma"
