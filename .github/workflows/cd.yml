@@ -5,6 +5,11 @@ permissions:
   contents: read
 
 on:
+  workflow_run:
+    workflows: ["CI"]
+    types:
+      - completed
+    status: success
   push:
     tags:
       - 'v*'
