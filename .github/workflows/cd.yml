@@ -1,4 +1,4 @@
-name: Deploy latest tag
+name: Latest tag deploy
 
 permissions:
   id-token: write
