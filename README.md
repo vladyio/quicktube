@@ -1,5 +1,7 @@
 # QuickTube.app
 
+![CI](https://github.com/vladyio/quicktube/actions/workflows/ci.yml/badge.svg)
+
 <img src="shot.png">
 
 <p align="center">
