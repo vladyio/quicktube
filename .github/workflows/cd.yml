@@ -38,3 +38,7 @@ jobs:
           environment: production
         env:
           RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
+          HOST_IP: ${{ vars.HOST_IP }}
+          KAMAL_PROXY_HOST: ${{ vars.KAMAL_PROXY_HOST }}
+          SSH_USER: ${{ vars.SSH_USER }}
+          SSH_PORT: ${{ vars.SSH_PORT }}
