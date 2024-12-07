@@ -31,10 +31,10 @@
 
     `cp config/deploy.yml.sample config/deploy.yml`
 4. Set values in `config/deploy.yml` to match your setup
-5. Create a `.kamal/secrets` file from sample:
+5. Create a `.env` file from sample:
 
-    `cp .kamal/secrets.sample .kamal/secrets`
-6. Set values in `.kamal/secrets` to match your setup
+    `cp .env.sample .env`
+6. Set values in `.env` to match your setup
 7. Prepare server(s) - everything from copying an SSH key to setting up UFW, users and permissions:
 
    ```

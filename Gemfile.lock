@@ -89,6 +89,7 @@ GEM
     debug (1.9.2)
       irb (~> 1.10)
       reline (>= 0.3.8)
+    dotenv (3.1.4)
     drb (2.2.1)
     erubi (1.13.0)
     globalid (1.2.1)
@@ -299,6 +300,7 @@ DEPENDENCIES
   bootsnap
   brakeman
   debug
+  dotenv (~> 3.1)
   importmap-rails
   ostruct (~> 0.6.0)
   propshaft

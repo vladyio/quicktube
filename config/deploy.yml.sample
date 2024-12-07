@@ -28,11 +28,14 @@ volumes:
 
 asset_path: /rails/public/assets
 
+<% require "dotenv"; Dotenv.load(".env") %>
+
 registry:
   server: ghcr.io
-  username: username
+  username:
+    - KAMAL_REGISTRY_USERNAME
   password:
-    - REGISTRY_PASSWORD
+    - KAMAL_REGISTRY_PASSWORD
 
 env:
   clear:
@@ -41,7 +44,7 @@ env:
     RETRIES: 5
     PATHS: public/dl
   secret:
-    - SECRET_KEY_BASE
+    - RAILS_MASTER_KEY
 
 ssh:
   user: admin

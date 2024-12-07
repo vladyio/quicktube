@@ -1,0 +1,40 @@
+name: Deploy latest tag
+
+permissions:
+  id-token: write
+  contents: read
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  deploy-production:
+    name: Deploy to production
+    concurrency:
+      group: production_environment
+      cancel-in-progress: true
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://quicktube.app
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_branch }}
+
+      - uses: ./.github/workflows/setup
+        name: Setup
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Kamal Deploy
+        uses: igor-alexandrov/kamal-deploy@v0.3.0
+        with:
+          registry-username: ${{ secrets.KAMAL_REGISTRY_USERNAME }}
+          registry-password: ${{ secrets.KAMAL_REGISTRY_PASSWORD }}
+          environment: production
+        env:
+          RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}

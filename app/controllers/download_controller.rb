@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class DownloadController < ApplicationController
-  ALLOWED_FILES = [ "123" ]
   def index
     link = params[:link]
 

@@ -3,6 +3,7 @@ source "https://rubygems.org"
 ruby file: ".ruby-version"
 
 gem "bootsnap", require: false
+gem "dotenv", "~> 3.1"
 gem "importmap-rails"
 gem "ostruct", "~> 0.6.0"
 gem "propshaft"
