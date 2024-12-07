@@ -1,6 +1,7 @@
 # QuickTube.app
 
 ![CI](https://github.com/vladyio/quicktube/actions/workflows/ci.yml/badge.svg)
+![CD](https://github.com/vladyio/quicktube/actions/workflows/cd.yml/badge.svg)
 
 <img src="shot.png">
 
