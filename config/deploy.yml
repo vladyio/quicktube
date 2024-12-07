@@ -1,0 +1,63 @@
+<% require "dotenv"; Dotenv.load(".env") %>
+
+service: quicktube
+
+image: vladyio/quicktube
+
+servers:
+  web:
+    hosts:
+      - <%= ENV.fetch("HOST_IP") %>
+  job:
+    hosts:
+      - <%= ENV.fetch("HOST_IP") %>
+    cmd: bundle exec sidekiq
+  cron:
+    hosts:
+      - <%= ENV.fetch("HOST_IP") %>
+    cmd: bash -c "cat config/crontab | crontab - && declare -p | grep -Ev '\b(BASHOPTS|BASH_VERSINFO|EUID|PPID|SHELLOPTS|UID)\b' >> /rails/tmp/.cron.env && cron -f"
+
+builder:
+  arch: amd64
+  cache:
+    type: registry
+    options: mode=max,image-manifest=true,oci-mediatypes=true
+
+proxy:
+  ssl: true
+  host: <%= ENV.fetch("KAMAL_PROXY_HOST") %>
+  app_port: 3000
+
+volumes:
+  - "/rails/public/dl:/rails/public/dl"
+
+asset_path: /rails/public/assets
+
+registry:
+  server: ghcr.io
+  username:
+    - KAMAL_REGISTRY_USERNAME
+  password:
+    - KAMAL_REGISTRY_PASSWORD
+
+env:
+  clear:
+    REDIS_URL: redis://quicktube-redis:6379/0
+    MAX_FILESIZE: 1G
+    RETRIES: 5
+    PATHS: public/dl
+  secret:
+    - RAILS_MASTER_KEY
+
+ssh:
+  user: <%= ENV.fetch("SSH_USER", "root") %>
+  port: <%= ENV.fetch("SSH_PORT", 22) %>
+
+accessories:
+  redis:
+    roles:
+      - web
+      - job
+    image: redis:7.2.5-alpine
+    directories:
+      - data:/data
