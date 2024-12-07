@@ -1,0 +1,29 @@
+{
+  "ignored_warnings": [
+    {
+      "warning_type": "File Access",
+      "warning_code": 16,
+      "fingerprint": "fd9d4e99c15534bb9349a4ce35f924144ccc53fc2d72a1113fa3c3be6a7b72bb",
+      "check_name": "SendFile",
+      "message": "Parameter value used in file name",
+      "file": "app/controllers/download_controller.rb",
+      "line": 27,
+      "link": "https://brakemanscanner.org/docs/warning_types/file_access/",
+      "code": "send_file(Pathname.new(Rails.root.join(\"public\", \"dl\", File.basename(params[:filename]))).cleanpath, :disposition => \"attachment\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "DownloadController",
+        "method": "show"
+      },
+      "user_input": "params[:filename]",
+      "confidence": "Weak",
+      "cwe_id": [
+        22
+      ],
+      "note": ""
+    }
+  ],
+  "updated": "2024-12-07 11:36:13 +0300",
+  "brakeman_version": "6.2.2"
+}
