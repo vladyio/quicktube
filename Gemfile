@@ -14,7 +14,7 @@ gem "redis"
 gem "sidekiq"
 gem "stimulus-rails"
 gem "tailwindcss-rails"
-gem "thruster", "~> 0.1.9"
+gem "thruster", "~> 0.1.11"
 gem "turbo-rails"
 gem "tzinfo-data", platforms: %i[windows jruby]
 
