@@ -1,4 +1,0 @@
-SHELL=/bin/bash
-BASH_ENV=/rails/tmp/.cron.env
-
-@hourly cd /rails && bin/rails runner 'DlCleanup.call' >> /tmp/cron.log 2>&1

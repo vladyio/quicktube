@@ -1,0 +1,5 @@
+production:
+  periodic_command:
+    command: "DlCleanup.call"
+    priority: 1
+    schedule: every hour

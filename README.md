@@ -14,7 +14,7 @@
 <hr>
 
 <div align="center">
-  💎 Ruby 3.3 · 🛤 Rails 8 · ⚡️ Stimulus · 🅺 Kamal 2
+  💎 Ruby 3.4 · 🛤 Rails 8 · ⚡️ Stimulus · 🅺 Kamal 2
 </div>
 
 <hr>
@@ -44,7 +44,6 @@
 8. Finally, deploy:
 
    ```
-   kamal accessory boot redis
    kamal deploy
    ```
 

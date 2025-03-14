@@ -1,15 +1,13 @@
 # frozen_string_literal: true
 
-class DownloadJob
-  include Sidekiq::Job
-
+class DownloadJob < ApplicationJob
   def perform(link)
     file_path = YoutubeDownload.new(link).call
 
-    ActionCable.server.broadcast "download_#{jid}", { status: :complete, message: file_path }
+    ActionCable.server.broadcast "download_#{job_id}", { status: :complete, message: file_path }
   rescue YoutubeDownload::DownloadError, StandardError => e
     Rails.logger.tagged(self.class.name, link).error(e.message)
 
-    ActionCable.server.broadcast "download_#{jid}", { status: :error, message: e.message }
+    ActionCable.server.broadcast "download_#{job_id}", { status: :error, message: e.message }
   end
 end

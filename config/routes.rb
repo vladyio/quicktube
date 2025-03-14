@@ -1,10 +1,4 @@
-require "sidekiq/web"
-
 Rails.application.routes.draw do
-  unless Rails.env.production?
-    mount Sidekiq::Web => "/sidekiq"
-  end
-
   root "home#index"
 
   get "home/index"

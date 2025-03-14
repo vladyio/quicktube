@@ -8,14 +8,6 @@ servers:
   web:
     hosts:
       - <%= ENV.fetch("HOST_IP") %>
-  job:
-    hosts:
-      - <%= ENV.fetch("HOST_IP") %>
-    cmd: bundle exec sidekiq
-  cron:
-    hosts:
-      - <%= ENV.fetch("HOST_IP") %>
-    cmd: bash -c "cat config/crontab | crontab - && declare -p | grep -Ev '\b(BASHOPTS|BASH_VERSINFO|EUID|PPID|SHELLOPTS|UID)\b' >> /rails/tmp/.cron.env && cron -f"
 
 builder:
   arch: amd64
@@ -30,6 +22,7 @@ proxy:
 
 volumes:
   - "/rails/public/dl:/rails/public/dl"
+  - "quicktube_storage:/rails/storage"
 
 asset_path: /rails/public/assets
 
@@ -42,10 +35,10 @@ registry:
 
 env:
   clear:
-    REDIS_URL: redis://quicktube-redis:6379/0
     MAX_FILESIZE: 1G
     RETRIES: 5
     PATHS: public/dl
+    SOLID_QUEUE_IN_PUMA: true
   secret:
     - RAILS_MASTER_KEY
 
@@ -53,11 +46,7 @@ ssh:
   user: <%= ENV.fetch("SSH_USER", "root") %>
   port: <%= ENV.fetch("SSH_PORT", 22) %>
 
-accessories:
-  redis:
-    roles:
-      - web
-      - job
-    image: redis:7.2.5-alpine
-    directories:
-      - data:/data
+aliases:
+  console: app exec --interactive --reuse "bin/rails console"
+  shell: app exec --interactive --reuse "bash"
+  logs: app logs -f

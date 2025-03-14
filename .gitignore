@@ -41,3 +41,4 @@ config/deploy.*.yml
 !/app/assets/builds/.keep
 
 /.vscode
+/node_modules

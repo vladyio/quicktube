@@ -138,6 +138,5 @@ puts_info " ssh #{user_name}@#{hosts.first} #{'-p ' + ssh_port.to_s if ssh_port 
 
 puts "To deploy, run:"
 puts <<-EOF
-  kamal accessory boot redis #{'-d ' + environment if environment}
   kamal deploy #{'-d ' + environment if environment}
 EOF

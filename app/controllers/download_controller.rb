@@ -5,7 +5,7 @@ class DownloadController < ApplicationController
     link = params[:link]
 
     if YoutubeLinkValidator.new(link).valid?
-      jid = DownloadJob.perform_async(link)
+      jid = DownloadJob.perform_later(link).job_id
 
       render json: { jid: }
     else
