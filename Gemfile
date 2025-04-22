@@ -14,7 +14,7 @@ gem "solid_cable"
 gem "solid_queue"
 gem "sqlite3"
 gem "stimulus-rails"
-gem "thruster", "~> 0.1.9"
+gem "thruster", "~> 0.1.13"
 gem "turbo-rails"
 
 group :development, :test do
