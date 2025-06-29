@@ -47,7 +47,8 @@ class YoutubeDownload
       "--no-keep-video",
       "--paths #{paths}",
       "--print after_move:filepath",
-      "--restrict-filenames"
+      "--restrict-filenames",
+      "--cookies #{Rails.root.join("config/cookies.txt")}"
     ].join(" ")
   end
 
