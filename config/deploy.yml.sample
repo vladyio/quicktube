@@ -23,6 +23,7 @@ proxy:
 volumes:
   - "/rails/public/dl:/rails/public/dl"
   - "quicktube_storage:/rails/storage"
+  - "/rails/config/cookies.txt:/rails/config/cookies.txt"
 
 asset_path: /rails/public/assets
 

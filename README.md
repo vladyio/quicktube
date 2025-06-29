@@ -24,6 +24,25 @@
 > [!NOTE]
 > For Kamal v1 with Traefik, see [legacy v0.1.7.1](https://github.com/vladyio/quicktube/tree/v0.1.7.1).
 
+First, you'll need to obtain a `cookies.txt` file to avoid bot checks coming from YouTube. Here's a
+guide on how to do this: https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp
+
+Short version:
+
+1. Install the `Get cookies.txt LOCALLY` extension (Chrome, Firefox)
+
+2. Open an incognito window
+
+3. Create a throw-away Google account, go to https://youtube.com/robots.txt
+
+4. Choose "Current Site" from the  `Get cookies.txt LOCALLY` extension menu
+
+5. With the `cookies.txt` that was loaded by extension run this command:
+
+    `scp -P <SSH_PORT> config/cookies.txt <SSH_USER>@<HOST>:/rails/config/cookies.txt`
+
+<hr>
+
 1. Clone the repository
 2. Install `kamal` (see [Kamal docs](https://kamal-deploy.org/docs/installation/)):
 
@@ -32,7 +51,7 @@
 
     `cp config/deploy.yml.sample config/deploy.yml`
 4. Set values in `config/deploy.yml` to match your setup
-5. Create a `.env` file from sample:
+5.  Create a `.env` file from sample:
 
     `cp .env.sample .env`
 6. Set values in `.env` to match your setup
