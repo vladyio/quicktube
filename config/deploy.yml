@@ -51,3 +51,12 @@ aliases:
   console: app exec --interactive --reuse "bin/rails console"
   shell: app exec --interactive --reuse "bash"
   logs: app logs -f
+
+accessories:
+  bgutil-provider:
+    role: web
+    image: brainicism/bgutil-ytdlp-pot-provider
+    port: "127.0.0.1:4416:4416"
+
+
+

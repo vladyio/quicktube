@@ -48,7 +48,8 @@ class YoutubeDownload
       "--paths #{paths}",
       "--print after_move:filepath",
       "--restrict-filenames",
-      "--cookies #{Rails.root.join("config/cookies.txt")}"
+      "--cookies #{Rails.root.join("config/cookies.txt")}",
+      "--extractor-args youtubepot-bgutilhttp:base_url=http://quicktube-bgutil-provider:4416"
     ].join(" ")
   end
 
