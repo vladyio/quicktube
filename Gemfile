@@ -6,7 +6,7 @@ gem "bootsnap", require: false
 gem "dotenv", "~> 3.1"
 gem "importmap-rails"
 gem "kamal"
-gem "ostruct", "~> 0.6.0"
+gem "ostruct", "~> 0.6.3"
 gem "propshaft"
 gem "puma"
 gem "rails", "~> 8.0"
